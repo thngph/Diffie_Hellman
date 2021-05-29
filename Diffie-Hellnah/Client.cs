@@ -110,10 +110,10 @@ namespace Diffie_Hellnah
             {
                 listView1.Items.Add(">>" + textBox1.Text);
                 Prime_Number pn = new Prime_Number();
-                pn.generate_pair(10);
+                pn.generate_pair(30);
                 p = pn.p;
                 g = pn.g;
-                this.a = Key_Exc.LongRandom(0,p,new Random());
+                this.a = Key_Exc.NextLong(new Random(), 0, p);
                 A = Prime_Number.power(g, this.a, p);
 
                 listView1.Items.Add(">> a: " + a);

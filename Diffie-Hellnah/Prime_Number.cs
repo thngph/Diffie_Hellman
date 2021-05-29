@@ -29,7 +29,7 @@ namespace Diffie_Hellnah
                 fact.Add(n);
             }
 
-            for (long res = 2; res <= p; res++)
+            for (long res = p - 1; res >= 2; res--)
             {
                 bool ok = true;
                 for (int i = 0; i < fact.Count && ok; i++)

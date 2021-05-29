@@ -24,6 +24,7 @@ namespace Diffie_Hellnah
         {
             InitializeComponent();
             CheckForIllegalCrossThreadCalls = false;
+            StartListen();
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -71,6 +72,36 @@ namespace Diffie_Hellnah
             listView1.Items.Add("Server is running...");
         }
 
+        void StartListen()
+        {
+
+            IPEndPoint iPEndPoint = new IPEndPoint(IPAddress.Any, 8080);
+            server.Bind(iPEndPoint);
+
+            Thread listen = new Thread(() =>
+            {
+                try
+                {
+                    while (true)
+                    {
+                        server.Listen(100);
+                        Socket client = server.Accept();
+                        _clients.Add(client);
+                        Thread receive = new Thread(Receive);
+                        receive.IsBackground = true;
+                        receive.Start(client);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            });
+            listen.IsBackground = true;
+            listen.Start();
+            button1.Enabled = false;
+            listView1.Items.Add("Server is running...");
+        }
 
         public void Receive(object obj)
         {
@@ -101,9 +132,6 @@ namespace Diffie_Hellnah
                     if (data.Contains(";"))
                     {
 
-                        
-
-
                         if (strList[0].Contains("p ="))
                         {
                             string bb = "";
@@ -117,7 +145,7 @@ namespace Diffie_Hellnah
                             if (bb.Length > 0)
                             {
                                 p = int.Parse(bb);
-                                this.b = Key_Exc.LongRandom(0, p, new Random());
+                                this.b = Key_Exc.NextLong(new Random(),0,p);
                                 listView1.Items.Add(">> b: " + this.b.ToString());
                                 B = Prime_Number.power(g, this.b, p);
 
