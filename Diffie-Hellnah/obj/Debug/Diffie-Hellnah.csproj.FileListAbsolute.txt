@@ -22,3 +22,15 @@ D:\solutions\C# solution\Diffie_Hellman\Diffie-Hellnah\obj\Debug\Diffie-Hellnah.
 D:\solutions\C# solution\Diffie_Hellman\Diffie-Hellnah\obj\Debug\Diffie-Hellnah.csproj.CoreCompileInputs.cache
 D:\solutions\C# solution\Diffie_Hellman\Diffie-Hellnah\obj\Debug\Diffie-Hellnah.exe
 D:\solutions\C# solution\Diffie_Hellman\Diffie-Hellnah\obj\Debug\Diffie-Hellnah.pdb
+C:\Users\PC\Documents\GitHub\Diffie_Hellman\Diffie-Hellnah\obj\Debug\Diffie-Hellnah.csprojAssemblyReference.cache
+C:\Users\PC\Documents\GitHub\Diffie_Hellman\Diffie-Hellnah\obj\Debug\Diffie_Hellnah.Client.resources
+C:\Users\PC\Documents\GitHub\Diffie_Hellman\Diffie-Hellnah\obj\Debug\Diffie_Hellnah.Form1.resources
+C:\Users\PC\Documents\GitHub\Diffie_Hellman\Diffie-Hellnah\obj\Debug\Diffie_Hellnah.Properties.Resources.resources
+C:\Users\PC\Documents\GitHub\Diffie_Hellman\Diffie-Hellnah\obj\Debug\Diffie_Hellnah.Server.resources
+C:\Users\PC\Documents\GitHub\Diffie_Hellman\Diffie-Hellnah\obj\Debug\Diffie-Hellnah.csproj.GenerateResource.cache
+C:\Users\PC\Documents\GitHub\Diffie_Hellman\Diffie-Hellnah\obj\Debug\Diffie-Hellnah.csproj.CoreCompileInputs.cache
+C:\Users\PC\Documents\GitHub\Diffie_Hellman\Diffie-Hellnah\obj\Debug\Diffie-Hellnah.exe
+C:\Users\PC\Documents\GitHub\Diffie_Hellman\Diffie-Hellnah\obj\Debug\Diffie-Hellnah.pdb
+C:\Users\PC\Documents\GitHub\Diffie_Hellman\Diffie-Hellnah\bin\Debug\Diffie-Hellnah.exe.config
+C:\Users\PC\Documents\GitHub\Diffie_Hellman\Diffie-Hellnah\bin\Debug\Diffie-Hellnah.exe
+C:\Users\PC\Documents\GitHub\Diffie_Hellman\Diffie-Hellnah\bin\Debug\Diffie-Hellnah.pdb
