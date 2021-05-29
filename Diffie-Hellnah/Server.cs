@@ -18,6 +18,8 @@ namespace Diffie_Hellnah
     
     public partial class Server : Form
     {
+        public long g, p, B;
+        private long b, Kb;
         public Server()
         {
             InitializeComponent();
@@ -83,35 +85,72 @@ namespace Diffie_Hellnah
                     client.Receive(buffer);
                     _currentData = (string)Deserialize(buffer);
                     string data = _currentData as string;
-                    char[] b = { '|' };
-                    int count = 2;
+                    char[] b = { ';' };
+                    int count = 3;
                     String[] strList = data.Split(b, count, StringSplitOptions.RemoveEmptyEntries);
-                    listView1.Items.Add(strList[0]);
-                    Send(strList[0]);
-
-                    if (_currentData.Contains("p ="))
+                    if (strList.Length >= 2)
                     {
-                        int p = 0;
-
-                        string bb = "";
-
-                        for (int i = 0; i < _currentData.Length; i++)
-                        {
-                            if (Char.IsDigit(_currentData[i]))
-                                bb += _currentData[i];
-                        }
-
-                        if (bb.Length > 0)
-                        {
-                            p = int.Parse(bb);
-                        }
-
-                        data = "Bob[the server]: p = " + p + "; g = " + generator(p).ToString();
-
-                        listView1.Items.Add(data);
-                        Send(data);
+                        Send(strList[0] + "; " + strList[1]);
+                        listView1.Items.Add(strList[0] + strList[1]);
                     }
-                    
+                    else
+                    {
+                        Send(data);
+                        listView1.Items.Add(data);
+                    }
+                    if (data.Contains(";"))
+                    {
+
+                        
+
+
+                        if (strList[0].Contains("p ="))
+                        {
+                            string bb = "";
+
+                            for (int i = 0; i < strList[0].Length; i++)
+                            {
+                                if (Char.IsDigit(strList[0][i]))
+                                    bb += strList[0][i];
+                            }
+
+                            if (bb.Length > 0)
+                            {
+                                p = int.Parse(bb);
+                                this.b = Key_Exc.LongRandom(0, p, new Random());
+                                listView1.Items.Add(">> b: " + this.b.ToString());
+                                B = Prime_Number.power(g, this.b, p);
+
+                                
+                                Kb = Prime_Number.power(g, long.Parse(bb), p);
+                            }
+
+                        }
+
+                        if (strList[1].Contains("g ="))
+                        {
+                            string bb = "";
+
+                            for (int i = 0; i < strList[1].Length; i++)
+                            {
+                                if (Char.IsDigit(strList[1][i]))
+                                    bb += strList[1][i];
+                            }
+
+                            if (bb.Length > 0)
+                            {
+                                g = int.Parse(bb);
+                            }
+                        }
+
+                        if (strList[2].Length != 0)
+                        {
+                            this.B = Prime_Number.power(g,this.b, p);
+                            Send("sharekey " + B.ToString());
+                            listView1.Items.Add(">> shared key B sent.");
+                        }
+                    }
+
                 }
 
             }
@@ -121,6 +160,7 @@ namespace Diffie_Hellnah
 
             }
         }
+
 
         private void Send(string data_need_to_send)
         {

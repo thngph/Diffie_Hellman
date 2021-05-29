@@ -10,3 +10,15 @@ D:\solutions\C# solution\Diffie-Hellnah\obj\Debug\Diffie-Hellnah.csproj.Generate
 D:\solutions\C# solution\Diffie-Hellnah\obj\Debug\Diffie-Hellnah.csproj.CoreCompileInputs.cache
 D:\solutions\C# solution\Diffie-Hellnah\obj\Debug\Diffie-Hellnah.exe
 D:\solutions\C# solution\Diffie-Hellnah\obj\Debug\Diffie-Hellnah.pdb
+D:\solutions\C# solution\Diffie_Hellman\Diffie-Hellnah\bin\Debug\Diffie-Hellnah.exe.config
+D:\solutions\C# solution\Diffie_Hellman\Diffie-Hellnah\bin\Debug\Diffie-Hellnah.exe
+D:\solutions\C# solution\Diffie_Hellman\Diffie-Hellnah\bin\Debug\Diffie-Hellnah.pdb
+D:\solutions\C# solution\Diffie_Hellman\Diffie-Hellnah\obj\Debug\Diffie-Hellnah.csprojAssemblyReference.cache
+D:\solutions\C# solution\Diffie_Hellman\Diffie-Hellnah\obj\Debug\Diffie_Hellnah.Client.resources
+D:\solutions\C# solution\Diffie_Hellman\Diffie-Hellnah\obj\Debug\Diffie_Hellnah.Form1.resources
+D:\solutions\C# solution\Diffie_Hellman\Diffie-Hellnah\obj\Debug\Diffie_Hellnah.Properties.Resources.resources
+D:\solutions\C# solution\Diffie_Hellman\Diffie-Hellnah\obj\Debug\Diffie_Hellnah.Server.resources
+D:\solutions\C# solution\Diffie_Hellman\Diffie-Hellnah\obj\Debug\Diffie-Hellnah.csproj.GenerateResource.cache
+D:\solutions\C# solution\Diffie_Hellman\Diffie-Hellnah\obj\Debug\Diffie-Hellnah.csproj.CoreCompileInputs.cache
+D:\solutions\C# solution\Diffie_Hellman\Diffie-Hellnah\obj\Debug\Diffie-Hellnah.exe
+D:\solutions\C# solution\Diffie_Hellman\Diffie-Hellnah\obj\Debug\Diffie-Hellnah.pdb

@@ -18,9 +18,8 @@ namespace Diffie_Hellnah
 {
     public partial class Client : Form
     {
-        public string p;
-        public string g;
-
+        public long p, g, A;
+        private long a, Ka;
         public Client()
         {
             InitializeComponent();
@@ -81,8 +80,20 @@ namespace Diffie_Hellnah
                     _client.Receive(buffer);
                     _currentData = Deserialize(buffer);
                     string data = _currentData as string;
+                    if (data.Contains("sharekey"))
+                    {
+                        string B = "";
 
+                        for (int i = 0; i < data.Length; i++)
+                        {
+                            if (Char.IsDigit(data[i]))
+                                B += data[i];
+                        }
+                        Ka = Prime_Number.power(long.Parse(B),a,p);
+                    }
+                    else
                     listView1.Items.Add(data);
+
                 }
             }
             catch (Exception ex)
@@ -95,13 +106,26 @@ namespace Diffie_Hellnah
         private void button1_Click(object sender, EventArgs e)
         {
             string text = "";
-            if(textBox1.Text =="get p")
+            if(textBox1.Text =="generate pair")
             {
+                listView1.Items.Add(">>" + textBox1.Text);
+                Prime_Number pn = new Prime_Number();
+                pn.generate_pair(10);
+                p = pn.p;
+                g = pn.g;
+                this.a = Key_Exc.LongRandom(0,p,new Random());
+                A = Prime_Number.power(g, this.a, p);
+
+                listView1.Items.Add(">> a: " + a);
+                listView1.Items.Add("shared key A sent");
                 //p = small_primes[rnd.Next(small_primes.Length)].ToString();
                 //int size_bits = 10;
-                p = RandomPrime(10).ToString();
-                text = textBox2.Text + "[the client]: p =" + p;
-                
+                //p = RandomPrime(10).ToString();
+
+
+                text = textBox2.Text + "[the client]: p = " + pn.p.ToString() + "; g = " + pn.g.ToString() +";" + A.ToString() ;
+
+
             }
             else
             {
@@ -147,122 +171,12 @@ namespace Diffie_Hellnah
         }
 
 
-        public int generator(int p)
-        {
-            List<int> fact = new List<int>();
-            int phi = p - 1;
-            int n = phi;
-            for(int i = 2; i*i <= n; i++)
-            {
-                if (n%i == 0)
-                {
-                    fact.Add(i);
-                    while (n % i == 0)
-                        n /= i;
-                }
-            }
-            if (n > 1)
-            {
-                fact.Add(n);
-            }
-            
-            for (int res = 2; res <= p; res++)
-            {
-                bool ok = true;
-                for(int i = 0; i < fact.Count && ok; i++)
-                {
-                    ok &= powmod(res, phi / fact[i], p)!= 1;
-                }
-                if (ok)
-                    return res;
-            }
-            return -1;
-        }
-
         
         private void Client_Load(object sender, EventArgs e)
         {
 
         }
 
-        public static Random rnd = new Random();
-        public static int[] small_primes = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97 };
-
-        static long power(long x, long y, long p)
-        {
-            long res = 1;
-            x = x % p;
-            while (y > 0)
-            {
-                if (y % 2 == 1)
-                {
-                    res = (res * x) % p;
-                }
-                y = y >> 1;
-                x = (x * x) % p;
-            }
-            return res;
-        }
-        static bool MillerRabin(long q, long n)
-        {
-            Random r = new Random();
-            int k = (int)n - 2;
-            long a = r.Next(2, k);
-            long x = power(a, q, n);
-            if (x == 1 || x == n - 1)
-                return true;
-            while (q != n - 1)
-            {
-                x = (x * x) % n;
-                q *= 2;
-
-                if (x == 1)
-                    return false;
-                if (x == n - 1)
-                    return true;
-            }
-            return false;
-        }
-
-        static bool isPrime(long n)
-        {
-            if (n <= 1 || n == 4)
-                return false;
-            if (n <= 3)
-                return true;
-
-            long q = n - 1;
-            while (q % 2 == 0)
-                q /= 2;
-
-            for (int i = 1; i <= 50; i++)
-            {
-                if (MillerRabin(q, n) == false)
-                    return false;
-            }
-
-            return true;
-        }
-
-        static long RandomPrime(int size)
-        {
-            Random r = new Random();
-            int a = (int)(Math.Pow(2, size - 1));
-            int b = (int)(Math.Pow(2, size));
-            long beg_rand = r.Next(a, b);
-            if (beg_rand % 2 == 0)
-                beg_rand += 1;
-
-            for (long possiblePrime = beg_rand; possiblePrime <= b; possiblePrime++)
-            {
-                if (isPrime(possiblePrime))
-                {
-                    return possiblePrime;
-                }
-            }
-            return 0;
-        }
-
-
+        
     }
 }
