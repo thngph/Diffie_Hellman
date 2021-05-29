@@ -118,7 +118,7 @@ namespace Diffie_Hellnah
                 A = Prime_Number.power(g, this.a, p);
 
                 listView1.Items.Add(">> a: " + a);
-                listView1.Items.Add("shared key A sent.");
+                listView1.Items.Add("shared key a sent.");
                 //p = small_primes[rnd.Next(small_primes.Length)].ToString();
                 //int size_bits = 10;
                 //p = RandomPrime(10).ToString();
