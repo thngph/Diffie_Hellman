@@ -145,12 +145,13 @@ namespace Diffie_Hellnah
                             if (bb.Length > 0)
                             {
                                 p = int.Parse(bb);
-                                this.b = Key_Exc.NextLong(new Random(),0,p);
+                                this.b = Key_Exc.NextLong(new Random(100),0,p - 1);
                                 listView1.Items.Add(">> b: " + this.b.ToString());
                                 B = Prime_Number.power(g, this.b, p);
 
                                 
                                 Kb = Prime_Number.power(g, long.Parse(bb), p);
+
                             }
 
                         }
@@ -173,6 +174,7 @@ namespace Diffie_Hellnah
 
                         if (strList[2].Length != 0)
                         {
+                            listView1.Items.Add(">> public key A received.");
                             this.B = Prime_Number.power(g,this.b, p);
                             Send("sharekey " + B.ToString());
                             listView1.Items.Add(">> shared key B sent.");

@@ -60,8 +60,8 @@ namespace Diffie_Hellnah
         public static bool MillerRabin(long q, long n)
         {
             Random r = new Random();
-            int k = (int)n - 2;
-            long a = r.Next(2, k);
+            long k = n - 2;
+            long a = Key_Exc.NextLong(new Random(), 0, k);
             long x = power(a, q, n);
             if (x == 1 || x == n - 1)
                 return true;
@@ -98,23 +98,21 @@ namespace Diffie_Hellnah
             return true;
         }
 
+
+        public static long RandomOdd(int size)
+        {
+            long p = Key_Exc.NextLong(new Random(), 0, Convert.ToInt64(Math.Pow(2, size)));
+            return p = (p|1)|(1<<size);
+        }
         public static long RandomPrime(int size)
         {
-            Random r = new Random();
-            int a = (int)(Math.Pow(2, size - 1));
-            int b = (int)(Math.Pow(2, size));
-            long beg_rand = r.Next(a, b);
-            if (beg_rand % 2 == 0)
-                beg_rand += 1;
-
-            for (long possiblePrime = beg_rand; possiblePrime <= b; possiblePrime++)
+            long p = RandomOdd(size);
+            while (isPrime(p) == false)
             {
-                if (isPrime(possiblePrime))
-                {
-                    return possiblePrime;
-                }
+                p = RandomOdd(size);
             }
-            return 0;
+
+            return p;
         }
 
         public void generate_pair(int size)

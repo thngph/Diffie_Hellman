@@ -90,6 +90,7 @@ namespace Diffie_Hellnah
                                 B += data[i];
                         }
                         Ka = Prime_Number.power(long.Parse(B),a,p);
+                        listView1.Items.Add(">>public key B received.");
                     }
                     else
                     listView1.Items.Add(data);
@@ -110,14 +111,14 @@ namespace Diffie_Hellnah
             {
                 listView1.Items.Add(">>" + textBox1.Text);
                 Prime_Number pn = new Prime_Number();
-                pn.generate_pair(30);
+                pn.generate_pair(4*8);
                 p = pn.p;
                 g = pn.g;
-                this.a = Key_Exc.NextLong(new Random(), 0, p);
+                this.a = Key_Exc.NextLong(new Random(), 0, p - 1);
                 A = Prime_Number.power(g, this.a, p);
 
                 listView1.Items.Add(">> a: " + a);
-                listView1.Items.Add("shared key A sent");
+                listView1.Items.Add("shared key A sent.");
                 //p = small_primes[rnd.Next(small_primes.Length)].ToString();
                 //int size_bits = 10;
                 //p = RandomPrime(10).ToString();
