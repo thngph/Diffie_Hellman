@@ -99,10 +99,11 @@ namespace Diffie_Hellnah
             {
                 Send("Alice [the client]: " + textBox1.Text);
                 string text = "";
+                do { 
                 a = Key_Exc.NextLong(new Random(), 1, g);
-                Thread.Sleep(200);
+                A = Prime_Number.power(g, a, p); }
+                while (A<0);
                 listView1.Items.Add(">> a = " + a.ToString());
-                A = Prime_Number.power(g, a, p);
                 listView1.Items.Add(">> generated public key A");
                 text = String.Format("Alice [the client]: I have sent you my public key! A = {0}", A);
                 Send(text);
@@ -146,11 +147,13 @@ namespace Diffie_Hellnah
             if (msg.Contains("B ="))
             {
                 B = Lnumber_extracter(msg);
+                listView1.Items.Add(">> B = " + B.ToString());
                 Send("Alice [the client]: I have received your public key too!");
                 
                 Ka = Prime_Number.power(B, a, p);
-                Thread.Sleep(200);
+                Thread.Sleep(500);
                 listView1.Items.Add(">> key exchanged successfully!");
+                listView1.Items.Add(">> K = " + Ka.ToString());
             }
             return -1;
         }

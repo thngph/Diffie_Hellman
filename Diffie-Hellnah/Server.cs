@@ -165,10 +165,12 @@ namespace Diffie_Hellnah
                 listView1.Items.Add(">> b = " + b.ToString());
                 B = Prime_Number.power(g, b, p);
                 listView1.Items.Add(">> generated public key B");
+                listView1.Items.Add(">> B = " + B.ToString());
                 string text = String.Format("Bob [the server]: I have sent you my public key! B = {0}", B);
                 Send(text);
                 Kb = Prime_Number.power(A,b,p);
                 listView1.Items.Add(">> key exchanged successfully!");
+                listView1.Items.Add(">> K = " + Kb.ToString());
                 return 3;
             }
             return -1;
