@@ -15,7 +15,7 @@ using System.Windows.Forms;
 
 namespace Diffie_Hellnah
 {
-    
+
     public partial class Server : Form
     {
         public long g = 0, p = 0, B = 0, A = 0;
@@ -33,7 +33,7 @@ namespace Diffie_Hellnah
             listView1.Items.Add(text);
             text = "Bob [the server]" + ": " + text;
             Send(text);
-            
+
         }
 
         string _currentData = "";
@@ -98,7 +98,7 @@ namespace Diffie_Hellnah
                     //char[] b = { ';' };
                     //int count = 3;
                     //String[] strList = data.Split(b, count, StringSplitOptions.RemoveEmptyEntries);
-                  
+
 
                 }
 
@@ -147,10 +147,10 @@ namespace Diffie_Hellnah
                 int sz = number_extracter(msg);
                 p = Prime_Number.RandomPrime(sz);
                 listView1.Items.Add(">> p = " + p.ToString());
-                Send(String.Format("Bob [the server]: I have sent you a random {0} bits Primary number p = {1}", sz, p ));
+                Send(String.Format("Bob [the server]: I have sent you a random Primary number p = {1}", sz, p));
                 return 1;
             }
-            if(msg.ToLower().Contains("send me g"))
+            if (msg.ToLower().Contains("send me g"))
             {
                 g = Prime_Number.generator(p);
                 listView1.Items.Add(">> g = " + g.ToString());
@@ -168,7 +168,7 @@ namespace Diffie_Hellnah
                 listView1.Items.Add(">> B = " + B.ToString());
                 string text = String.Format("Bob [the server]: I have sent you my public key! B = {0}", B);
                 Send(text);
-                Kb = Prime_Number.power(A,b,p);
+                Kb = Prime_Number.power(A, b, p);
                 listView1.Items.Add(">> key exchanged successfully!");
                 listView1.Items.Add(">> K = " + Kb.ToString());
                 return 3;
@@ -176,6 +176,7 @@ namespace Diffie_Hellnah
             return -1;
         }
 
+        
         int number_extracter(string msg)
         {
             string b = "";

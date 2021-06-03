@@ -8,14 +8,13 @@ namespace Diffie_Hellnah
 {
     public static class Prime_Number
     {
-        public static long g, p;
 
         public static long generator(long p)
         {
             List<long> fact = new List<long>();
             long phi = p - 1;
             long n = phi;
-            for (int i = 2; i * i <= n; i++)
+            for (int i = 2; i * i <= n; ++i)
             {
                 if (n % i == 0)
                 {
@@ -45,15 +44,16 @@ namespace Diffie_Hellnah
         public static long power(long x, long y, long p)
         {
             long res = 1;
-            x = x % p;
-            while (y > 0)
+            while (y != 0)
             {
                 if (y % 2 == 1)
                 {
-                    res = (res * x) % p;
+                    res = (res * 1L * x) % p; --y;
                 }
-                y = y >> 1;
-                x = (x * x) % p;
+                else
+                {
+                    x = (x * 1L * x % p); y >>= 1;
+                }
             }
             return res;
         }

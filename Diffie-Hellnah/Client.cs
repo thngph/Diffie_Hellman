@@ -135,13 +135,13 @@ namespace Diffie_Hellnah
             if(msg.Contains("p ="))
             {
                 p = Lnumber_extracter(msg);
-                Send(String.Format("Alice [the client]: I have received the random Prime number p!"));
+                Send(String.Format("Alice [the client]: I have received the random Prime number p: {0}!", p));
                 return 1;
             }
             if (msg.Contains("g ="))
             {
                 g = Lnumber_extracter(msg);
-                Send(String.Format("Alice [the client]: I have received g!"));
+                Send(String.Format("Alice [the client]: I have received g: {0}!", g));
                 return 2;
             }
             if (msg.Contains("B ="))
@@ -158,20 +158,6 @@ namespace Diffie_Hellnah
             return -1;
         }
 
-        int number_extracter(string msg)
-        {
-            string b = "";
-
-            for (int i = 0; i < msg.Length; i++)
-            {
-                if (Char.IsDigit(msg[i]))
-                    b += msg[i];
-            }
-
-            if (b.Length > 0)
-                return int.Parse(b);
-            return -1;
-        }
 
         long Lnumber_extracter(string msg)
         {
@@ -187,7 +173,23 @@ namespace Diffie_Hellnah
                 return long.Parse(b);
             return -1;
         }
-        private void Client_Load(object sender, EventArgs e)
+        long power(long x, long y, long p)
+        {
+            long res = 1;
+            while (y != 0)
+            {
+                if (y % 2 == 1)
+                {
+                    res = (res * 1L * x) % p; --y;
+                }
+                else
+                {
+                    x = (x * 1L * x % p); y >>= 1;
+                }
+            }
+            return res;
+        }
+            private void Client_Load(object sender, EventArgs e)
         {
 
         }
