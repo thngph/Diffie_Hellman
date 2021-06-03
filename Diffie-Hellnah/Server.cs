@@ -148,6 +148,7 @@ namespace Diffie_Hellnah
                 p = Prime_Number.RandomPrime(sz);
                 listView1.Items.Add(">> p = " + p.ToString());
                 Send(String.Format("Bob [the server]: I have sent you a random Primary number p = {1}", sz, p));
+                b = Kb = B = 0;
                 return 1;
             }
             if (msg.ToLower().Contains("send me g"))
@@ -171,6 +172,7 @@ namespace Diffie_Hellnah
                 Kb = Prime_Number.power(A, b, p);
                 listView1.Items.Add(">> key exchanged successfully!");
                 listView1.Items.Add(">> K = " + Kb.ToString());
+
                 return 3;
             }
             return -1;

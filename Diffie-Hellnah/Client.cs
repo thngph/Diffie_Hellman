@@ -95,18 +95,19 @@ namespace Diffie_Hellnah
         private void button1_Click(object sender, EventArgs e)
         {
             
-            if(textBox1.Text.ToLower().Contains("public key a"))
+            if(textBox1.Text.ToLower().Contains("exchange key"))
             {
                 Send("Alice [the client]: " + textBox1.Text);
                 string text = "";
-                do { 
+
                 a = Key_Exc.NextLong(new Random(), 1, g);
-                A = Prime_Number.power(g, a, p); }
-                while (A<0);
-                listView1.Items.Add(">> a = " + a.ToString());
-                listView1.Items.Add(">> generated public key A");
+                A = Prime_Number.power(g, a, p);
                 text = String.Format("Alice [the client]: I have sent you my public key! A = {0}", A);
                 Send(text);
+                listView1.Items.Add(">> a = " + a.ToString());
+                listView1.Items.Add(">> generated public key A");
+                
+
             }
             else
             {
@@ -135,25 +136,26 @@ namespace Diffie_Hellnah
             if(msg.Contains("p ="))
             {
                 p = Lnumber_extracter(msg);
-                Send(String.Format("Alice [the client]: I have received the random Prime number p: {0}!", p));
+                Send(String.Format("Alice [the client]: I have received the random Prime number p!"));
+                a = A = Ka = 0;
                 return 1;
             }
             if (msg.Contains("g ="))
             {
                 g = Lnumber_extracter(msg);
-                Send(String.Format("Alice [the client]: I have received g: {0}!", g));
+                Send(String.Format("Alice [the client]: I have received g!"));
                 return 2;
             }
             if (msg.Contains("B ="))
             {
                 B = Lnumber_extracter(msg);
-                listView1.Items.Add(">> B = " + B.ToString());
                 Send("Alice [the client]: I have received your public key too!");
                 
                 Ka = Prime_Number.power(B, a, p);
-                Thread.Sleep(500);
                 listView1.Items.Add(">> key exchanged successfully!");
                 listView1.Items.Add(">> K = " + Ka.ToString());
+                return 3;
+
             }
             return -1;
         }
