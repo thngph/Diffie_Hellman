@@ -37,7 +37,7 @@
             // listView1
             // 
             this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(13, 83);
+            this.listView1.Location = new System.Drawing.Point(12, 72);
             this.listView1.Margin = new System.Windows.Forms.Padding(4);
             this.listView1.Name = "listView1";
             this.listView1.Size = new System.Drawing.Size(939, 304);
@@ -50,7 +50,7 @@
             this.button1.Location = new System.Drawing.Point(763, 2);
             this.button1.Margin = new System.Windows.Forms.Padding(4);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(189, 54);
+            this.button1.Size = new System.Drawing.Size(189, 48);
             this.button1.TabIndex = 2;
             this.button1.Text = "Listen";
             this.button1.UseVisualStyleBackColor = true;
@@ -58,7 +58,7 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(13, 416);
+            this.textBox1.Location = new System.Drawing.Point(12, 399);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(938, 53);
@@ -66,7 +66,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(763, 491);
+            this.button2.Location = new System.Drawing.Point(762, 471);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(188, 40);
             this.button2.TabIndex = 5;
@@ -78,7 +78,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(965, 666);
+            this.ClientSize = new System.Drawing.Size(965, 521);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.listView1);

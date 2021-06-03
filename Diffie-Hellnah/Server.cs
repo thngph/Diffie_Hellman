@@ -18,8 +18,8 @@ namespace Diffie_Hellnah
     
     public partial class Server : Form
     {
-        public long g, p, B;
-        private long b, Kb;
+        public long g = 0, p = 0, B = 0, A = 0;
+        private long b = 0, Kb = 0;
         public Server()
         {
             InitializeComponent();
@@ -29,12 +29,11 @@ namespace Diffie_Hellnah
 
         private void button2_Click(object sender, EventArgs e)
         {
-            string text = "Bob [the server]" + ": " + textBox1.Text;
-
-            string text_sended =  text;
-
-            Send(text_sended);
+            string text = textBox1.Text;
             listView1.Items.Add(text);
+            text = "Bob [the server]" + ": " + text;
+            Send(text);
+            
         }
 
         string _currentData = "";
@@ -44,32 +43,7 @@ namespace Diffie_Hellnah
 
         private void button1_Click(object sender, EventArgs e)
         {
-            IPEndPoint iPEndPoint = new IPEndPoint(IPAddress.Any, 8080);
-            server.Bind(iPEndPoint);
 
-            Thread listen = new Thread(() =>
-            {
-                try
-                {
-                    while (true)
-                    {
-                        server.Listen(100);
-                        Socket client = server.Accept();
-                        _clients.Add(client);
-                        Thread receive = new Thread(Receive);
-                        receive.IsBackground = true;
-                        receive.Start(client);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-            });
-            listen.IsBackground = true;
-            listen.Start();
-            button1.Enabled = false;
-            listView1.Items.Add("Server is running...");
         }
 
         void StartListen()
@@ -100,7 +74,7 @@ namespace Diffie_Hellnah
             listen.IsBackground = true;
             listen.Start();
             button1.Enabled = false;
-            listView1.Items.Add("Server is running...");
+            listView1.Items.Add("Server is ready...");
         }
 
         public void Receive(object obj)
@@ -116,70 +90,15 @@ namespace Diffie_Hellnah
                     client.Receive(buffer);
                     _currentData = (string)Deserialize(buffer);
                     string data = _currentData as string;
-                    char[] b = { ';' };
-                    int count = 3;
-                    String[] strList = data.Split(b, count, StringSplitOptions.RemoveEmptyEntries);
-                    if (strList.Length >= 2)
-                    {
-                        Send(strList[0] + "; " + strList[1]);
-                        listView1.Items.Add(strList[0] + strList[1]);
-                    }
-                    else
-                    {
-                        Send(data);
-                        listView1.Items.Add(data);
-                    }
-                    if (data.Contains(";"))
-                    {
+                    Send(data);
+                    listView1.Items.Add(data);
 
-                        if (strList[0].Contains("p ="))
-                        {
-                            string bb = "";
+                    msg_checker(data);
 
-                            for (int i = 0; i < strList[0].Length; i++)
-                            {
-                                if (Char.IsDigit(strList[0][i]))
-                                    bb += strList[0][i];
-                            }
-
-                            if (bb.Length > 0)
-                            {
-                                p = int.Parse(bb);
-                                this.b = Key_Exc.NextLong(new Random(100),0,p - 1);
-                                listView1.Items.Add(">> b: " + this.b.ToString());
-                                B = Prime_Number.power(g, this.b, p);
-
-                                
-                                Kb = Prime_Number.power(g, long.Parse(bb), p);
-
-                            }
-
-                        }
-
-                        if (strList[1].Contains("g ="))
-                        {
-                            string bb = "";
-
-                            for (int i = 0; i < strList[1].Length; i++)
-                            {
-                                if (Char.IsDigit(strList[1][i]))
-                                    bb += strList[1][i];
-                            }
-
-                            if (bb.Length > 0)
-                            {
-                                g = int.Parse(bb);
-                            }
-                        }
-
-                        if (strList[2].Length != 0)
-                        {
-                            listView1.Items.Add(">> public key A received.");
-                            this.B = Prime_Number.power(g,this.b, p);
-                            Send("sharekey " + B.ToString());
-                            listView1.Items.Add(">> shared key B sent.");
-                        }
-                    }
+                    //char[] b = { ';' };
+                    //int count = 3;
+                    //String[] strList = data.Split(b, count, StringSplitOptions.RemoveEmptyEntries);
+                  
 
                 }
 
@@ -221,56 +140,67 @@ namespace Diffie_Hellnah
             return bf.Deserialize(ms);
         }
 
-        public int powmod(int a, int b, int p)
+        int msg_checker(string msg)
         {
-            int res = 1;
-            while (b != 0)
+            if (msg.Contains("bit"))
             {
-                if ((b & 1) != 0)
-                {
-                    res = (int)(res * 1L * a % p);
-                    --b;
-                }
-                else
-                {
-                    a = (int)(a * 1L * a % p);
-                    b >>= 1;
-                }
-
+                int sz = number_extracter(msg);
+                p = Prime_Number.RandomPrime(sz);
+                listView1.Items.Add(">> p = " + p.ToString());
+                Send(String.Format("Bob [the server]: I have sent you a random {0} bits Primary number p = {1}", sz, p ));
+                return 1;
             }
-            return res;
+            if(msg.ToLower().Contains("send me g"))
+            {
+                g = Prime_Number.generator(p);
+                listView1.Items.Add(">> g = " + g.ToString());
+                Send(String.Format("Bob [the server]: I have sent you a primitive root of p, g = {0}", g));
+                return 2;
+            }
+            if (msg.ToLower().Contains("a ="))
+            {
+                A = Lnumber_extracter(msg);
+                Send(String.Format("Bob [the server]: I have received your public key!"));
+                b = Key_Exc.NextLong(new Random(), 1, p);
+                listView1.Items.Add(">> b = " + b.ToString());
+                B = Prime_Number.power(g, b, p);
+                listView1.Items.Add(">> generated public key B");
+                string text = String.Format("Bob [the server]: I have sent you my public key! B = {0}", B);
+                Send(text);
+                Kb = Prime_Number.power(A,b,p);
+                listView1.Items.Add(">> key exchanged successfully!");
+                return 3;
+            }
+            return -1;
         }
 
-
-        public int generator(int p)
+        int number_extracter(string msg)
         {
-            List<int> fact = new List<int>();
-            int phi = p - 1;
-            int n = phi;
-            for (int i = 2; i * i <= n; i++)
+            string b = "";
+
+            for (int i = 0; i < msg.Length; i++)
             {
-                if (n % i == 0)
-                {
-                    fact.Add(i);
-                    while (n % i == 0)
-                        n /= i;
-                }
-            }
-            if (n > 1)
-            {
-                fact.Add(n);
+                if (Char.IsDigit(msg[i]))
+                    b += msg[i];
             }
 
-            for (int res  = p -1; res >=2; res--)
+            if (b.Length > 0)
+                return int.Parse(b);
+            return -1;
+        }
+
+        long Lnumber_extracter(string msg)
+        {
+            string b = "";
+
+            for (int i = 0; i < msg.Length; i++)
             {
-                bool ok = true;
-                for (int i = 0; i < fact.Count && ok; i++)
-                {
-                    ok &= powmod(res, phi / fact[i], p) != 1;
-                }
-                if (ok)
-                    return res;
+                if (Char.IsDigit(msg[i]))
+                    b += msg[i];
             }
+
+            if (b.Length > 0)
+                return long.Parse(b);
             return -1;
         }
     }

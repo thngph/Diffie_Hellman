@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Diffie_Hellnah
 {
-    class Prime_Number
+    public static class Prime_Number
     {
-        public long g, p;
-        
-        public long generator(long p)
+        public static long g, p;
+
+        public static long generator(long p)
         {
             List<long> fact = new List<long>();
             long phi = p - 1;
@@ -102,7 +102,7 @@ namespace Diffie_Hellnah
         public static long RandomOdd(int size)
         {
             long p = Key_Exc.NextLong(new Random(), 0, Convert.ToInt64(Math.Pow(2, size)));
-            return p = (p|1)|(1<<size);
+            return p = Math.Abs(p | 1);
         }
         public static long RandomPrime(int size)
         {
@@ -115,11 +115,6 @@ namespace Diffie_Hellnah
             return p;
         }
 
-        public void generate_pair(int size)
-        {
-            p = RandomPrime(size);
-            g = generator(p);
-        }
 
     }
 }

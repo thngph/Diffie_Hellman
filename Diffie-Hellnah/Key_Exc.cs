@@ -34,7 +34,7 @@ namespace Diffie_Hellnah
             return random.NextLong(0, max);
         }
 
-    
+
         public static long NextLong(this Random random)
         {
             return random.NextLong(long.MinValue, long.MaxValue);

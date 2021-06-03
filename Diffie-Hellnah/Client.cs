@@ -18,8 +18,8 @@ namespace Diffie_Hellnah
 {
     public partial class Client : Form
     {
-        public long p, g, A;
-        private long a, Ka;
+        public long p = 0, g = 0, A = 0, B = 0;
+        private long a = 0, Ka = 0;
         public Client()
         {
             InitializeComponent();
@@ -80,19 +80,7 @@ namespace Diffie_Hellnah
                     _client.Receive(buffer);
                     _currentData = Deserialize(buffer);
                     string data = _currentData as string;
-                    if (data.Contains("sharekey"))
-                    {
-                        string B = "";
-
-                        for (int i = 0; i < data.Length; i++)
-                        {
-                            if (Char.IsDigit(data[i]))
-                                B += data[i];
-                        }
-                        Ka = Prime_Number.power(long.Parse(B),a,p);
-                        listView1.Items.Add(">>public key B received.");
-                    }
-                    else
+                    msg_checker(data);
                     listView1.Items.Add(data);
 
                 }
@@ -106,35 +94,24 @@ namespace Diffie_Hellnah
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string text = "";
-            if(textBox1.Text =="generate pair")
+            
+            if(textBox1.Text.ToLower().Contains("public key a"))
             {
-                listView1.Items.Add(">>" + textBox1.Text);
-                Prime_Number pn = new Prime_Number();
-                pn.generate_pair(4*8);
-                p = pn.p;
-                g = pn.g;
-                this.a = Key_Exc.NextLong(new Random(), 0, p - 1);
-                A = Prime_Number.power(g, this.a, p);
-
-                listView1.Items.Add(">> a: " + a);
-                listView1.Items.Add("shared key a sent.");
-                //p = small_primes[rnd.Next(small_primes.Length)].ToString();
-                //int size_bits = 10;
-                //p = RandomPrime(10).ToString();
-
-
-                text = textBox2.Text + "[the client]: p = " + pn.p.ToString() + "; g = " + pn.g.ToString() +";" + A.ToString() ;
-
-
+                Send("Alice [the client]: " + textBox1.Text);
+                string text = "";
+                a = Key_Exc.NextLong(new Random(), 1, g);
+                Thread.Sleep(200);
+                listView1.Items.Add(">> a = " + a.ToString());
+                A = Prime_Number.power(g, a, p);
+                listView1.Items.Add(">> generated public key A");
+                text = String.Format("Alice [the client]: I have sent you my public key! A = {0}", A);
+                Send(text);
             }
             else
             {
-                text = textBox2.Text + "[the client]: " + textBox1.Text;
+                string text_sended = "Alice [the client]: " + textBox1.Text;
+                Send(text_sended);
             }
-            string text_sended =  text;
-
-            Send(text_sended);
         }
 
         byte[] Serialize(object o)
@@ -151,28 +128,62 @@ namespace Diffie_Hellnah
             return bf.Deserialize(ms);
         }
 
-        public int powmod (int a, int b, int p)
+
+        int msg_checker(string msg)
         {
-            int res = 1;
-            while ( b != 0)
+            if(msg.Contains("p ="))
             {
-                if ((b & 1) != 0)
-                {
-                    res = (int)(res * 1L * a % p);
-                    --b;
-                }
-                else
-                {
-                    a = (int)(a * 1L * a % p);
-                    b >>= 1;
-                }    
-                    
+                p = Lnumber_extracter(msg);
+                Send(String.Format("Alice [the client]: I have received the random Prime number p!"));
+                return 1;
             }
-            return res;
+            if (msg.Contains("g ="))
+            {
+                g = Lnumber_extracter(msg);
+                Send(String.Format("Alice [the client]: I have received g!"));
+                return 2;
+            }
+            if (msg.Contains("B ="))
+            {
+                B = Lnumber_extracter(msg);
+                Send("Alice [the client]: I have received your public key too!");
+                
+                Ka = Prime_Number.power(B, a, p);
+                Thread.Sleep(200);
+                listView1.Items.Add(">> key exchanged successfully!");
+            }
+            return -1;
         }
 
+        int number_extracter(string msg)
+        {
+            string b = "";
 
-        
+            for (int i = 0; i < msg.Length; i++)
+            {
+                if (Char.IsDigit(msg[i]))
+                    b += msg[i];
+            }
+
+            if (b.Length > 0)
+                return int.Parse(b);
+            return -1;
+        }
+
+        long Lnumber_extracter(string msg)
+        {
+            string b = "";
+
+            for (int i = 0; i < msg.Length; i++)
+            {
+                if (Char.IsDigit(msg[i]))
+                    b += msg[i];
+            }
+
+            if (b.Length > 0)
+                return long.Parse(b);
+            return -1;
+        }
         private void Client_Load(object sender, EventArgs e)
         {
 

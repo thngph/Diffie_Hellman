@@ -36,12 +36,13 @@
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(44, 350);
+            this.textBox2.Location = new System.Drawing.Point(44, 371);
             this.textBox2.Margin = new System.Windows.Forms.Padding(4);
             this.textBox2.Multiline = true;
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(171, 50);
+            this.textBox2.Size = new System.Drawing.Size(171, 29);
             this.textBox2.TabIndex = 7;
+            this.textBox2.Text = "Alice";
             // 
             // textBox1
             // 
@@ -69,7 +70,7 @@
             this.listView1.Location = new System.Drawing.Point(44, 13);
             this.listView1.Margin = new System.Windows.Forms.Padding(4);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(713, 283);
+            this.listView1.Size = new System.Drawing.Size(713, 335);
             this.listView1.TabIndex = 4;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.List;
