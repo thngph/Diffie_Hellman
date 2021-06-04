@@ -20,6 +20,7 @@ namespace Diffie_Hellnah
     {
         public long p = 0, g = 0, A = 0, B = 0;
         private long a = 0, Ka = 0;
+        public int type = 0;
         public Client()
         {
             InitializeComponent();
@@ -94,26 +95,54 @@ namespace Diffie_Hellnah
 
         private void button1_Click(object sender, EventArgs e)
         {
-            
-            if(textBox1.Text.ToLower().Contains("exchange key"))
+
+            if (textBox1.Text.ToLower().Contains("exchange key"))
             {
                 Send("Alice [the client]: " + textBox1.Text);
                 string text = "";
 
                 a = Key_Exc.NextLong(new Random(), 1, g);
                 A = Prime_Number.power(g, a, p);
+
                 text = String.Format("Alice [the client]: I have sent you my public key! A = {0}", A);
                 Send(text);
                 listView1.Items.Add(">> a = " + a.ToString());
                 listView1.Items.Add(">> generated public key A");
-                
+            }
 
+            else if (textBox1.Text.ToLower().Contains("choose"))
+            {
+                if (textBox1.Text.ToLower().Contains("1"))
+                {
+                    type = 1;
+                    Send(String.Format("Alice [the client]:" + textBox1.Text));
+                    listView1.Items.Add(">>Message will be encrypted by Caesar");
+                }
+                if (textBox1.Text.ToLower().Contains("2"))
+                {
+                    type = 2;
+                    Send(String.Format("Alice [the client]:" + textBox1.Text));
+                    listView1.Items.Add(">>Message will be encrypted by Viginnere");
+                }
+                if (textBox1.Text.ToLower().Contains("3"))
+                {       
+                    type = 3;
+                    Send(String.Format("Alice [the client]:" + textBox1.Text));
+                    listView1.Items.Add(">>Message will be encrypted by AES-ECB");
+                }
+            }
+            else if (type != 0)
+            {
+                string msg = textBox1.Text;
+                string cipher = encrypt_msg(type, msg);
+                Send(String.Format("Alice[client]: " + cipher));
             }
             else
             {
                 string text_sended = "Alice [the client]: " + textBox1.Text;
                 Send(text_sended);
             }
+            
         }
 
         byte[] Serialize(object o)
@@ -135,31 +164,48 @@ namespace Diffie_Hellnah
         {
             if(msg.Contains("p ="))
             {
-                p = Lnumber_extracter(msg);
+                p = Lnumber_extracter(msg);//Trích p từ tin nhắn của p
                 Send(String.Format("Alice [the client]: I have received the random Prime number p!"));
                 a = A = Ka = 0;
                 return 1;
             }
+
             if (msg.Contains("g ="))
             {
-                g = Lnumber_extracter(msg);
+                g = Lnumber_extracter(msg);//Trích g từ tin nhắn của Bob
                 Send(String.Format("Alice [the client]: I have received g!"));
                 return 2;
             }
+
             if (msg.Contains("B ="))
             {
-                B = Lnumber_extracter(msg);
+                B = Lnumber_extracter(msg);//Trích B từ tin nhắn của Bob
                 Send("Alice [the client]: I have received your public key too!");
                 
                 Ka = Prime_Number.power(B, a, p);
                 listView1.Items.Add(">> key exchanged successfully!");
                 listView1.Items.Add(">> K = " + Ka.ToString());
                 return 3;
-
             }
             return -1;
         }
-
+        string encrypt_msg(int type, string msg)
+        {
+            string cipher = "";
+            if (type == 1)
+            {
+                cipher = Encrypt.Caesar(Ka, msg);
+            }
+            else if (type == 2)
+            {
+                cipher = Encrypt.Viginnere(Ka, msg);
+            }
+            else if (type == 3)
+            {
+                cipher = Encrypt.AES_ECB(msg, Ka);
+            }
+            return cipher;
+        }
 
         long Lnumber_extracter(string msg)
         {
