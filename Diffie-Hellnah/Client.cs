@@ -27,6 +27,7 @@ namespace Diffie_Hellnah
             InitializeComponent();
             CheckForIllegalCrossThreadCalls = false;
             start();
+            listView1.Items.Add(">> send 'help' to get secured chat's instructions");
         }
 
         private Socket _client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -48,6 +49,7 @@ namespace Diffie_Hellnah
                     Thread listen = new Thread(Receive);
                     listen.IsBackground = true;
                     listen.Start();
+
                     break;
                 }
                 catch (Exception e)
@@ -84,12 +86,32 @@ namespace Diffie_Hellnah
                     string data = _currentData as string;
                     if (type == 0)
                     {
+
                         listView1.Items.Add(data);
-                        msg_checker(data);                       
+                        msg_checker(data);
+                                            
                     }
                     else
                     {
-                        msg_checker(data);                                              
+                        char[] b = { ':' };
+                        int count = 2;
+                        String[] strList = data.Split(b, count, StringSplitOptions.RemoveEmptyEntries);
+                        string _data = strList[1];
+                        if (_data.Contains("choose 1") | _data.Contains("choose 2") | _data.Contains("choose 3") | _data.Contains("opt 1") | _data.Contains("opt 2") | _data.Contains("opt 3"))
+                        {
+                            string special = "[secured message]";
+                            if (strList[0].ToLowerInvariant().Contains(special))
+                            {
+                                strList[0] = strList[0].Replace(special, "");
+                            }
+                            listView1.Items.Add(strList[0] + ": " + _data);
+                        }
+                           
+                        else
+                        {
+                            msg_checker(data);
+
+                        }
                     }
 
                 }
@@ -103,55 +125,68 @@ namespace Diffie_Hellnah
 
         private void button1_Click(object sender, EventArgs e)
         {
-
-            if (textBox1.Text.ToLower().Contains("exchange key"))
+            if(textBox1.Text.ToLower() == "help")
             {
-                Send("Alice [the client]: " + textBox1.Text);
-                string text = "";
-
-                a = Key_Exc.NextLong(new Random(), 1, g);
-                A = Prime_Number.power(g, a, p);
-
-                text = String.Format("Alice [the client]: I have sent you my public key! A = {0}", A);
-                Send(text);
-                listView1.Items.Add(">> a = " + a.ToString());
-                listView1.Items.Add(">> generated public key A");
+                MessageBox.Show("TYPE IN STRINGS CONTAIN PHRASES BELOW:\n\n*size + bits: generate random *size bits prime number\nG: get the largest primitive root g of p\nexc: exchange key(s)\nenc: start encrypted chat with exchanged shared key\n\notherwise. the chat remains PUBLIC");
+                textBox1.Text = "";
+                return;
             }
-
-            else if (textBox1.Text.ToLower().Contains("choose"))
+            if (type == 0)
             {
-                if (textBox1.Text.ToLower().Contains("1"))
+
+                if (textBox1.Text.ToLower().Contains("exchange key") | (textBox1.Text.ToLower().Contains("exc")))
                 {
-                    type = 1;
-                    Send(String.Format("Alice [the client]:" + textBox1.Text));
-                    listView1.Items.Add(">>Message will be encrypted by Caesar");
+                    Send("Alice [the client]: " + textBox1.Text);
+                    string text = "";
+
+                    a = Key_Exc.NextLong(new Random(), 1, g);
+                    A = Prime_Number.power(g, a, p);
+
+                    text = String.Format("Alice [the client]: I have sent you my public key! A = {0}", A);
+                    Send(text);
+                    listView1.Items.Add(">> a = " + a.ToString());
+                    listView1.Items.Add(">> generated public key A");
                 }
-                if (textBox1.Text.ToLower().Contains("2"))
+
+                else if (textBox1.Text.ToLower().Contains("choose") | textBox1.Text.ToLower().Contains("opt"))
                 {
-                    type = 2;
-                    Send(String.Format("Alice [the client]:" + textBox1.Text));
-                    listView1.Items.Add(">>Message will be encrypted by Viginnere");
+                    if (textBox1.Text.ToLower().Contains("1"))
+                    {
+                        type = 1;
+                        Send(String.Format("Alice [the client]: " + textBox1.Text));
+                        listView1.Items.Add(">> Message will be encrypted under Caesar cipher");
+                    }
+                    if (textBox1.Text.ToLower().Contains("2"))
+                    {
+                        type = 2;
+                        Send(String.Format("Alice [the client]: " + textBox1.Text));
+                        listView1.Items.Add(">> Message will be encrypted under Viginnere cipher");
+                    }
+                    if (textBox1.Text.ToLower().Contains("3"))
+                    {
+                        type = 3;
+                        Send(String.Format("Alice [the client]: " + textBox1.Text));
+                        listView1.Items.Add(">> Message will be encrypted under AES-ECB cipher");
+                    }
+                    else {
+                        listView1.Items.Add(">> please use a valid value (such as 'choose 1'/ 'opt 1')");
+                    }
                 }
-                if (textBox1.Text.ToLower().Contains("3"))
-                {       
-                    type = 3;
-                    Send(String.Format("Alice [the client]:" + textBox1.Text));
-                    listView1.Items.Add(">>Message will be encrypted by AES-ECB");
+                else
+                {
+                    string text_sended = "Alice [the client]: " + textBox1.Text;
+                    Send(text_sended);
                 }
             }
             else if (type != 0)
             {
                 string msg = textBox1.Text;
                 string cipher = encrypt_msg(type, msg);
-                Send(String.Format("Alice [the client]:"+ cipher));
+                Send(String.Format("Alice [the client][secured messaged]:"+ cipher));
                 
             }
-            else
-            {
-                string text_sended = "Alice [the client]: " + textBox1.Text;
-                Send(text_sended);
-            }
-            
+
+            textBox1.Text = "";
         }
 
         byte[] Serialize(object o)
@@ -199,13 +234,14 @@ namespace Diffie_Hellnah
                     return 3;
                 }
             }
+
             else
             {
                 char[] b = { ':' };
                 int count = 2;
                 String[] strList = msg.Split(b, count, StringSplitOptions.RemoveEmptyEntries);
-                listView1.Items.Add(msg);
-                str_tmp = ">> Decrypt: " + decrypt_msg(type, strList[1]);
+                //listView1.Items.Add(msg);
+                str_tmp = strList[0] + ": " + decrypt_msg(type, strList[1]);
                 listView1.Items.Add(str_tmp);
             }
             return -1;

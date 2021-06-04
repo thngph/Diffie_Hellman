@@ -42,9 +42,9 @@ namespace Diffie_Hellnah
             {
                 string msg = textBox1.Text;
                 string cipher = encrypt_msg(type, msg);
-                listView1.Items.Add("Bob [the server]:" +  cipher);
-                listView1.Items.Add(">>Decrypt " + decrypt_msg(type,cipher));
-                Send(String.Format("Bob [the client]:" + cipher));
+                //listView1.Items.Add("Bob [the server]:" +  cipher);
+                listView1.Items.Add("Bob [the server][secured message]: " + decrypt_msg(type,cipher));
+                Send(String.Format("Bob [the server][secured message]:" + cipher));
             }
 
         }
@@ -172,8 +172,9 @@ namespace Diffie_Hellnah
                     b = Kb = B = 0;
                     return 1;
                 }
+          
 
-                if (msg.ToLower().Contains("send me g"))//nếu lời gửi qua có chứa send me g=> tạo g
+                if (msg.ToLower().Contains("send me g") | (msg.Contains("G")))//nếu lời gửi qua có chứa send me g=> tạo g
                 {
                     g = Prime_Number.generator(p);
                     listView1.Items.Add(">> g = " + g.ToString());
@@ -202,29 +203,29 @@ namespace Diffie_Hellnah
                     return 3;
                 }
 
-                else if (msg.ToLower().Contains("encrypt"))//Chọn loại mã hóa
+                else if (msg.ToLower().Contains("encrypt")  | msg.ToLower().Contains("start secured message") | msg.ToLower().Contains("enc"))//Chọn loại mã hóa
                 {
-                    Send(String.Format("Bob [the server]:Choose 1 of 3 cipher: 1. Caesar, 2. Viginnere, 3.AES-ECB"));
-                    listView1.Items.Add(">>Choose 1 of 3 cipher: 1. Caesar, 2. Viginnere, 3.AES-ECB");
+                    Send(String.Format("Bob [the server]: Select 1 out of the following encrypting options: 1. Caesar, 2. Viginnere, 3. AES-ECB"));
+                    listView1.Items.Add("Bob [the server]: Select 1 out of the following encrypting options: 1. Caesar, 2. Viginnere, 3. AES-ECB");
                     return 4;
                 }
 
-                else if (msg.ToLower().Contains("choose"))
+                else if (msg.ToLower().Contains("choose") | msg.ToLower().Contains("opt"))
                 {
                     if (msg.ToLower().Contains("1"))
                     {
                         type = 1;
-                        listView1.Items.Add(">>Message will be encrypted by Caesar");
+                        listView1.Items.Add(">> Message will be encrypted under Caesar");
                     }
                     if (msg.ToLower().Contains("2"))
                     {
                         type = 2;
-                        listView1.Items.Add(">>Message will be encrypted by Viginnere");
+                        listView1.Items.Add(">> Message will be encrypted under Viginnere");
                     }
                     if (msg.ToLower().Contains("3"))
                     {
                         type = 3;
-                        listView1.Items.Add(">>Message will be encrypted by Viginnere");
+                        listView1.Items.Add(">> Message will be encrypted under Viginnere");
                     }
                     return 5;
                 }
@@ -234,8 +235,8 @@ namespace Diffie_Hellnah
                 char[] b = { ':' };
                 int count = 2;
                 String[] strList = msg.Split(b, count, StringSplitOptions.RemoveEmptyEntries);
-                listView1.Items.Add(msg);
-                str_tmp = ">> Decrypt: " + decrypt_msg(type, strList[1]);
+                //listView1.Items.Add(msg);
+                str_tmp = strList[0] + "[secured message]: " + decrypt_msg(type, strList[1]);
                 listView1.Items.Add(str_tmp);
                 return 6;
             }
