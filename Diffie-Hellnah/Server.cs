@@ -225,7 +225,7 @@ namespace Diffie_Hellnah
                     if (msg.ToLower().Contains("3"))
                     {
                         type = 3;
-                        listView1.Items.Add(">> Message will be encrypted under Viginnere");
+                        listView1.Items.Add(">> Message will be encrypted under AES_ECB");
                     }
                     return 5;
                 }

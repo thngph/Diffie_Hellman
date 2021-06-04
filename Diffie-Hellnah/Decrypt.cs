@@ -100,9 +100,16 @@ namespace Diffie_Hellnah
         }
         public static string AES_ECB(string text,long k)
         {
+            string k_string = k.ToString();
+            int padding = 16 - k_string.Length;
+            if (k_string.Length != 16)
+            {
+                for (int i = 0; i < padding; i++)
+                    k_string = k_string + "x";
+            }
             byte[] src = Convert.FromBase64String(text);
             RijndaelManaged aes = new RijndaelManaged();
-            byte[] key = Encoding.ASCII.GetBytes(k.ToString());
+            byte[] key = Encoding.ASCII.GetBytes(k_string);
             aes.KeySize = 128;
             aes.Padding = PaddingMode.PKCS7;
             aes.Mode = CipherMode.ECB;
