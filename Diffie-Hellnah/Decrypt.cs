@@ -35,7 +35,9 @@ namespace Diffie_Hellnah
                         if (ch.ToString().Equals(low[i]))
                             break;
                     }
-                    cipher = cipher + low[Math.Abs(i + key) % 26];
+                    long tmp = i - key%26;
+                    if (tmp < 0) tmp = tmp + 26;
+                    cipher = cipher + low[tmp];
                 }
             }
             return cipher;

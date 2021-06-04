@@ -225,7 +225,7 @@ namespace Diffie_Hellnah
                 char[] b = { ':' };
                 int count = 2;
                 String[] strList = msg.Split(b, count, StringSplitOptions.RemoveEmptyEntries);
-                str_tmp = strList[0] + ": " + decrypt_msg(type, strList[1]);
+                str_tmp = strList[0] + "(decrypted): " + decrypt_msg(type, strList[1]);
                 listView1.Items.Add(str_tmp);
                 return 6;
             }
