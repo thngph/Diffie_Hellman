@@ -21,6 +21,7 @@ namespace Diffie_Hellnah
         public long p = 0, g = 0, A = 0, B = 0;
         private long a = 0, Ka = 0;
         public int type = 0;
+        public string str_tmp;
         public Client()
         {
             InitializeComponent();
@@ -81,8 +82,15 @@ namespace Diffie_Hellnah
                     _client.Receive(buffer);
                     _currentData = Deserialize(buffer);
                     string data = _currentData as string;
-                    msg_checker(data);
-                    listView1.Items.Add(data);
+                    if (type == 0)
+                    {
+                        listView1.Items.Add(data);
+                        msg_checker(data);                       
+                    }
+                    else
+                    {
+                        msg_checker(data);                                              
+                    }
 
                 }
             }
@@ -135,7 +143,8 @@ namespace Diffie_Hellnah
             {
                 string msg = textBox1.Text;
                 string cipher = encrypt_msg(type, msg);
-                Send(String.Format("Alice [the client]:{0}", cipher));
+                Send(String.Format("Alice [the client]:"+ cipher));
+                
             }
             else
             {
@@ -162,30 +171,42 @@ namespace Diffie_Hellnah
 
         int msg_checker(string msg)
         {
-            if(msg.Contains("p ="))
+            if (type == 0)
             {
-                p = Lnumber_extracter(msg);//Trích p từ tin nhắn của p
-                Send(String.Format("Alice [the client]: I have received the random Prime number p!"));
-                a = A = Ka = 0;
-                return 1;
-            }
+                if (msg.Contains("p ="))
+                {
+                    p = Lnumber_extracter(msg);//Trích p từ tin nhắn của p
+                    Send(String.Format("Alice [the client]: I have received the random Prime number p!"));
+                    a = A = Ka = 0;
+                    return 1;
+                }
 
-            if (msg.Contains("g ="))
-            {
-                g = Lnumber_extracter(msg);//Trích g từ tin nhắn của Bob
-                Send(String.Format("Alice [the client]: I have received g!"));
-                return 2;
-            }
+                if (msg.Contains("g ="))
+                {
+                    g = Lnumber_extracter(msg);//Trích g từ tin nhắn của Bob
+                    Send(String.Format("Alice [the client]: I have received g!"));
+                    return 2;
+                }
 
-            if (msg.Contains("B ="))
+                if (msg.Contains("B ="))
+                {
+                    B = Lnumber_extracter(msg);//Trích B từ tin nhắn của Bob
+                    Send("Alice [the client]: I have received your public key too!");
+
+                    Ka = Prime_Number.power(B, a, p);
+                    listView1.Items.Add(">> key exchanged successfully!");
+                    listView1.Items.Add(">> K = " + Ka.ToString());
+                    return 3;
+                }
+            }
+            else
             {
-                B = Lnumber_extracter(msg);//Trích B từ tin nhắn của Bob
-                Send("Alice [the client]: I have received your public key too!");
-                
-                Ka = Prime_Number.power(B, a, p);
-                listView1.Items.Add(">> key exchanged successfully!");
-                listView1.Items.Add(">> K = " + Ka.ToString());
-                return 3;
+                char[] b = { ':' };
+                int count = 2;
+                String[] strList = msg.Split(b, count, StringSplitOptions.RemoveEmptyEntries);
+                listView1.Items.Add(msg);
+                str_tmp = ">> Decrypt: " + decrypt_msg(type, strList[1]);
+                listView1.Items.Add(str_tmp);
             }
             return -1;
         }
@@ -207,6 +228,24 @@ namespace Diffie_Hellnah
 
             return cipher;
 
+        }
+        string decrypt_msg(int type, string msg)
+        {
+
+            string plaintext = "";
+            if (type == 1)
+            {
+                plaintext = Decrypt.Caesar(Ka, msg);
+            }
+            else if (type == 2)
+            {
+                plaintext = Decrypt.Viginnere(Ka, msg);
+            }
+            else if (type == 3)
+            {
+                plaintext = Decrypt.AES_ECB(msg, Ka);
+            }
+            return plaintext;
         }
 
         long Lnumber_extracter(string msg)

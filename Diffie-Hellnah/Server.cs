@@ -32,9 +32,19 @@ namespace Diffie_Hellnah
         private void button2_Click(object sender, EventArgs e)
         {
             string text = textBox1.Text;
-            listView1.Items.Add(text);
             text = "Bob [the server]" + ": " + text;
-            Send(text);
+            if (type == 0)
+            {
+                listView1.Items.Add(text);
+                Send(text);
+            }
+            else
+            {
+                string msg = textBox1.Text;
+                string cipher = encrypt_msg(type, msg);
+                listView1.Items.Add("Bob [the server]:" +  cipher);
+                Send(String.Format("Bob [the client]:" + cipher));
+            }
 
         }
 
@@ -92,18 +102,16 @@ namespace Diffie_Hellnah
                     client.Receive(buffer);
                     _currentData = (string)Deserialize(buffer);
                     string data = _currentData as string;
-                    if (type < 1)
+                    if (type == 0)
                     {
-
                         Send(data);
-                        msg_checker(data);
                         listView1.Items.Add(data);
+                        msg_checker(data);                       
                     }
                     else
                     {
-                        msg_checker(data);
-                        Send(str_tmp);
-
+                        Send(data);
+                        msg_checker(data);                                              
                     }
                     //char[] b = { ';' };
                     //int count = 3;
@@ -152,7 +160,7 @@ namespace Diffie_Hellnah
 
         int msg_checker(string msg)
         {
-            if (type != 1)
+            if (type == 0 )
             {
                 if (msg.Contains("bit"))//nếu lời gửi qua có chứa bits =>tạo p
                 {
@@ -225,7 +233,8 @@ namespace Diffie_Hellnah
                 char[] b = { ':' };
                 int count = 2;
                 String[] strList = msg.Split(b, count, StringSplitOptions.RemoveEmptyEntries);
-                str_tmp = strList[0] + "(decrypted): " + decrypt_msg(type, strList[1]);
+                listView1.Items.Add(msg);
+                str_tmp =">> Decrypt: " + decrypt_msg(type, strList[1]);
                 listView1.Items.Add(str_tmp);
                 return 6;
             }
