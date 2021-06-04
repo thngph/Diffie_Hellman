@@ -255,7 +255,7 @@ namespace Diffie_Hellnah
             }
             else if (type == 2)
             {
-                cipher = Encrypt.Viginnere(Ka, msg);
+                cipher = Encrypt.Vigenere(Ka, msg);
             }
             else if (type == 3)
             {
@@ -275,7 +275,7 @@ namespace Diffie_Hellnah
             }
             else if (type == 2)
             {
-                plaintext = Decrypt.Viginnere(Ka, msg);
+                plaintext = Decrypt.Vigenere(Ka, msg);
             }
             else if (type == 3)
             {

@@ -205,8 +205,8 @@ namespace Diffie_Hellnah
 
                 else if (msg.ToLower().Contains("encrypt")  | msg.ToLower().Contains("start secured message") | msg.ToLower().Contains("enc"))//Chọn loại mã hóa
                 {
-                    Send(String.Format("Bob [the server]: Select 1 out of the following encrypting options: 1. Caesar, 2. Viginnere, 3. AES-ECB"));
-                    listView1.Items.Add("Bob [the server]: Select 1 out of the following encrypting options: 1. Caesar, 2. Viginnere, 3. AES-ECB");
+                    Send(String.Format("Bob [the server]: Select 1 out of the following encrypting options: 1. Caesar, 2. Viginere, 3. AES-ECB"));
+                    listView1.Items.Add("Bob [the server]: Select 1 out of the following encrypting options: 1. Caesar, 2. Viginere, 3. AES-ECB");
                     return 4;
                 }
 
@@ -252,7 +252,7 @@ namespace Diffie_Hellnah
             }
             else if(type==2)
             {
-                cipher = Encrypt.Viginnere(Kb, msg);
+                cipher = Encrypt.Vigenere(Kb, msg);
             }
             else if(type==3)
             {
@@ -271,7 +271,7 @@ namespace Diffie_Hellnah
             }
             else if (type == 2)
             {
-                plaintext = Decrypt.Viginnere(Kb, msg);
+                plaintext = Decrypt.Vigenere(Kb, msg);
             }
             else if (type == 3)
             {

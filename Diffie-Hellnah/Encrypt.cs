@@ -41,7 +41,7 @@ namespace Diffie_Hellnah
             return cipher;
         }
 
-        public static string Viginnere(long k, string msg)
+        public static string Vigenere(long k, string msg)
         {
             string key = k.ToString();
             string cipher = "";

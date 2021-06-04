@@ -43,14 +43,13 @@ namespace Diffie_Hellnah
             return cipher;
         }
 
-        public static string Viginnere(long k, string msg)
+        public static string Vigenere(long k, string msg)
         {
             string key = k.ToString();
             string cipher = "";
             while (key.Length < msg.Length)
                 key = key + key;
             int i = 0;
-
             foreach (char ch in msg)
             {
                 if (!char.IsLetter(ch))
@@ -75,12 +74,10 @@ namespace Diffie_Hellnah
                         if (ch.ToString().Equals(upp[i]))
                             break;
                     }
-
                     long tmp = i - subkey % 26;
                     if (tmp < 0) tmp = tmp + 26;
                     cipher = cipher + upp[tmp];
                 }
-
                 if (char.IsLower(ch))
                 {
                     char a = key[i_key];
