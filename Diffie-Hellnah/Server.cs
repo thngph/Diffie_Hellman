@@ -20,7 +20,8 @@ namespace Diffie_Hellnah
     {
         public long g = 0, p = 0, B = 0, A = 0;
         private long b = 0, Kb = 0;
-        public int type=0;
+        public int type = 0;
+        string str_tmp;
         public Server()
         {
             InitializeComponent();
@@ -91,10 +92,19 @@ namespace Diffie_Hellnah
                     client.Receive(buffer);
                     _currentData = (string)Deserialize(buffer);
                     string data = _currentData as string;
-                    Send(data);
-                    listView1.Items.Add(data);
-                    msg_checker(data);
-                                       
+                    if (type < 1)
+                    {
+
+                        Send(data);
+                        msg_checker(data);
+                        listView1.Items.Add(data);
+                    }
+                    else
+                    {
+                        msg_checker(data);
+                        Send(str_tmp);
+
+                    }
                     //char[] b = { ';' };
                     //int count = 3;
                     //String[] strList = data.Split(b, count, StringSplitOptions.RemoveEmptyEntries);
@@ -142,75 +152,82 @@ namespace Diffie_Hellnah
 
         int msg_checker(string msg)
         {
-            if (msg.Contains("bit"))//nếu lời gửi qua có chứa bits =>tạo p
+            if (type != 1)
             {
-                int sz = number_extracter(msg);
-                p = Prime_Number.RandomPrime(sz);
-                listView1.Items.Add(">> p = " + p.ToString());
-                Send(String.Format("Bob [the server]: I have sent you a random Primary number p = {1}", sz, p));
-                b = Kb = B = 0;
-                return 1;
-            }
-
-            if (msg.ToLower().Contains("send me g"))//nếu lời gửi qua có chứa send me g=> tạo g
-            {
-                g = Prime_Number.generator(p);
-                listView1.Items.Add(">> g = " + g.ToString());
-                Send(String.Format("Bob [the server]: I have sent you a primitive root of p, g = {0}", g));
-                return 2;
-            }
-
-            else if (msg.ToLower().Contains("a =")) //nếu lời gửi qua có chứa a 
-            {
-                A = Lnumber_extracter(msg); // Tách lấy phần số kiểu long trong message được gửi từ Alice
-                Send(String.Format("Bob [the server]: I have received your public key!"));
-
-                b = Key_Exc.NextLong(new Random(), 1, p);//Tạo khóa private của Bob 
-                listView1.Items.Add(">> b = " + b.ToString());
-                
-                B = Prime_Number.power(g, b, p); // Tính khóa public của Bob
-                listView1.Items.Add(">> generated public key B");
-                listView1.Items.Add(">> B = " + B.ToString());
-                string text = String.Format("Bob [the server]: I have sent you my public key! B = {0}", B);
-                Send(text);//gửi
-
-                Kb = Prime_Number.power(A, b, p);//Tính khóa chung bằng công thưc Kb=A^b mod p
-                listView1.Items.Add(">> key exchanged successfully!");
-                listView1.Items.Add(">> K = " + Kb.ToString());
-
-                return 3;
-            }
-
-            else if(msg.ToLower().Contains("encrypt"))//Chọn loại mã hóa
-            {              
-                Send(String.Format("Bob [the server]:Choose 1 of 3 cipher: 1. Caesar, 2. Viginnere, 3.AES-ECB"));
-                listView1.Items.Add(">>Choose 1 of 3 cipher: 1. Caesar, 2. Viginnere, 3.AES-ECB");
-                return 4;
-            }
-
-            else if (msg.ToLower().Contains("choose"))
-            {
-                if (msg.ToLower().Contains("1"))
+                if (msg.Contains("bit"))//nếu lời gửi qua có chứa bits =>tạo p
                 {
-                    type = 1;
-                    listView1.Items.Add(">>Message will be encrypted by Caesar");
+                    int sz = number_extracter(msg);
+                    p = Prime_Number.RandomPrime(sz);
+                    listView1.Items.Add(">> p = " + p.ToString());
+                    Send(String.Format("Bob [the server]: I have sent you a random Primary number p = {1}", sz, p));
+                    b = Kb = B = 0;
+                    return 1;
                 }
-                if (msg.ToLower().Contains("2"))
-                {
-                    type = 2;
-                    listView1.Items.Add(">>Message will be encrypted by Viginnere");
-                }
-                if (msg.ToLower().Contains("3"))
-                {
-                    type = 3;
-                    listView1.Items.Add(">>Message will be encrypted by Viginnere");
-                }
-                return 5;
-            }
 
-            else if(type == 1)
+                if (msg.ToLower().Contains("send me g"))//nếu lời gửi qua có chứa send me g=> tạo g
+                {
+                    g = Prime_Number.generator(p);
+                    listView1.Items.Add(">> g = " + g.ToString());
+                    Send(String.Format("Bob [the server]: I have sent you a primitive root of p, g = {0}", g));
+                    return 2;
+                }
+
+                else if (msg.ToLower().Contains("a =")) //nếu lời gửi qua có chứa a 
+                {
+                    A = Lnumber_extracter(msg); // Tách lấy phần số kiểu long trong message được gửi từ Alice
+                    Send(String.Format("Bob [the server]: I have received your public key!"));
+
+                    b = Key_Exc.NextLong(new Random(), 1, p);//Tạo khóa private của Bob 
+                    listView1.Items.Add(">> b = " + b.ToString());
+
+                    B = Prime_Number.power(g, b, p); // Tính khóa public của Bob
+                    listView1.Items.Add(">> generated public key B");
+                    listView1.Items.Add(">> B = " + B.ToString());
+                    string text = String.Format("Bob [the server]: I have sent you my public key! B = {0}", B);
+                    Send(text);//gửi
+
+                    Kb = Prime_Number.power(A, b, p);//Tính khóa chung bằng công thưc Kb=A^b mod p
+                    listView1.Items.Add(">> key exchanged successfully!");
+                    listView1.Items.Add(">> K = " + Kb.ToString());
+
+                    return 3;
+                }
+
+                else if (msg.ToLower().Contains("encrypt"))//Chọn loại mã hóa
+                {
+                    Send(String.Format("Bob [the server]:Choose 1 of 3 cipher: 1. Caesar, 2. Viginnere, 3.AES-ECB"));
+                    listView1.Items.Add(">>Choose 1 of 3 cipher: 1. Caesar, 2. Viginnere, 3.AES-ECB");
+                    return 4;
+                }
+
+                else if (msg.ToLower().Contains("choose"))
+                {
+                    if (msg.ToLower().Contains("1"))
+                    {
+                        type = 1;
+                        listView1.Items.Add(">>Message will be encrypted by Caesar");
+                    }
+                    if (msg.ToLower().Contains("2"))
+                    {
+                        type = 2;
+                        listView1.Items.Add(">>Message will be encrypted by Viginnere");
+                    }
+                    if (msg.ToLower().Contains("3"))
+                    {
+                        type = 3;
+                        listView1.Items.Add(">>Message will be encrypted by Viginnere");
+                    }
+                    return 5;
+                }
+            }
+            else
             {
-                listView1.Items.Add(">>" + decrypt_msg(type,msg));
+                char[] b = { ':' };
+                int count = 2;
+                String[] strList = msg.Split(b, count, StringSplitOptions.RemoveEmptyEntries);
+                str_tmp = strList[0] + ": " + decrypt_msg(type, strList[1]);
+                listView1.Items.Add(str_tmp);
+                return 6;
             }
             return -1;
         }
@@ -235,6 +252,7 @@ namespace Diffie_Hellnah
 
         string decrypt_msg(int type, string msg)
         {
+
             string plaintext = "";
             if (type == 1)
             {

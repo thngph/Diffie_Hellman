@@ -135,7 +135,7 @@ namespace Diffie_Hellnah
             {
                 string msg = textBox1.Text;
                 string cipher = encrypt_msg(type, msg);
-                Send(String.Format("Alice[client]: " + cipher));
+                Send(String.Format("Alice [the client]:{0}", cipher));
             }
             else
             {
@@ -204,7 +204,9 @@ namespace Diffie_Hellnah
             {
                 cipher = Encrypt.AES_ECB(msg, Ka);
             }
+
             return cipher;
+
         }
 
         long Lnumber_extracter(string msg)

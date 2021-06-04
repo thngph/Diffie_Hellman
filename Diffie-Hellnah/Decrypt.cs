@@ -16,7 +16,7 @@ namespace Diffie_Hellnah
             foreach (char ch in msg)
             {
                 if (!char.IsLetter(ch))
-                    cipher = cipher + " ";
+                    cipher = cipher + ch;
                 if (char.IsUpper(ch))
                 {
                     int i;
@@ -35,7 +35,7 @@ namespace Diffie_Hellnah
                         if (ch.ToString().Equals(low[i]))
                             break;
                     }
-                    cipher = cipher + low[(i - key) % 26];
+                    cipher = cipher + low[Math.Abs(i + key) % 26];
                 }
             }
             return cipher;
