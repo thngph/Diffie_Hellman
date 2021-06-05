@@ -243,6 +243,11 @@ namespace Diffie_Hellnah
             return -1;
         }
 
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
         string encrypt_msg(int type,string msg)
         {
             string cipher = "";

@@ -271,6 +271,12 @@ namespace Diffie_Hellnah
             return cipher;
 
         }
+
+        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
         string decrypt_msg(int type, string msg)
         {
 
