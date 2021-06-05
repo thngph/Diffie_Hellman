@@ -236,7 +236,7 @@ namespace Diffie_Hellnah
                 int count = 2;
                 String[] strList = msg.Split(b, count, StringSplitOptions.RemoveEmptyEntries);
                 //listView1.Items.Add(msg);
-                str_tmp = strList[0] + "[secured message]: " + decrypt_msg(type, strList[1]);
+                str_tmp = strList[0] + ": " + decrypt_msg(type, strList[1]);
                 listView1.Items.Add(str_tmp);
                 return 6;
             }
