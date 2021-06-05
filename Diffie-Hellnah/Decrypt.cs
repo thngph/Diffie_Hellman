@@ -43,14 +43,13 @@ namespace Diffie_Hellnah
             return cipher;
         }
 
-        public static string Viginnere(long k, string msg)
+        public static string Vigenere(long k, string msg)
         {
             string key = k.ToString();
             string cipher = "";
             while (key.Length < msg.Length)
                 key = key + key;
             int i = 0;
-
             foreach (char ch in msg)
             {
                 if (!char.IsLetter(ch))
@@ -75,12 +74,10 @@ namespace Diffie_Hellnah
                         if (ch.ToString().Equals(upp[i]))
                             break;
                     }
-
                     long tmp = i - subkey % 26;
                     if (tmp < 0) tmp = tmp + 26;
                     cipher = cipher + upp[tmp];
                 }
-
                 if (char.IsLower(ch))
                 {
                     char a = key[i_key];
@@ -100,9 +97,16 @@ namespace Diffie_Hellnah
         }
         public static string AES_ECB(string text,long k)
         {
+            string k_string = k.ToString();
+            int padding = 16 - k_string.Length;
+            if (k_string.Length != 16)
+            {
+                for (int i = 0; i < padding; i++)
+                    k_string = k_string + "x";
+            }
             byte[] src = Convert.FromBase64String(text);
             RijndaelManaged aes = new RijndaelManaged();
-            byte[] key = Encoding.ASCII.GetBytes(k.ToString());
+            byte[] key = Encoding.ASCII.GetBytes(k_string);
             aes.KeySize = 128;
             aes.Padding = PaddingMode.PKCS7;
             aes.Mode = CipherMode.ECB;
