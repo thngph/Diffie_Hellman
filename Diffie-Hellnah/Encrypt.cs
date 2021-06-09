@@ -10,13 +10,30 @@ namespace Diffie_Hellnah
     {
         public static string[] low = { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" };
         public static string[] upp = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
+        public static string[] number = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+
         public static string Caesar(long key, string msg)
         {
             string cipher = "";
             foreach (char ch in msg)
             {
+               
                 if (!char.IsLetter(ch))
-                    cipher = cipher + ch;
+                {
+                    bool state = false;
+                    for (int i = 0; i < number.Length; i++)
+                    {
+                        if (ch.ToString().Equals(number[i]))
+                        {
+                            cipher = cipher + number[(i + key) % 10];
+                            state = true;
+                            break;
+                        }   
+                    }
+                    if (!state)
+                        cipher += ch;
+                    
+                }
                 if (char.IsUpper(ch))
                 {
                     int i;
@@ -51,18 +68,36 @@ namespace Diffie_Hellnah
 
             foreach (char ch in msg)
             {
-                if (!char.IsLetter(ch))
+                int num;
+                if (!char.IsLetter(ch) && (int.TryParse(ch.ToString(), out num) == false))
                 {
                     key = key.Insert(i, " ");
                 }
                 i++;
             }
-            Console.WriteLine(key);
+
+            //Console.WriteLine(key);
             int i_key = 0;
             foreach (char ch in msg)
             {
                 if (!char.IsLetter(ch))
-                    cipher = cipher + " ";
+                {
+                    char a = key[i_key];
+                    int subkey = Int32.Parse(a.ToString());
+                    bool state = false;
+                    for (int j = 0; j < number.Length; j++)
+                    {
+                        if (ch.ToString().Equals(number[j]))
+                        {
+                            cipher = cipher + number[(subkey + j) % 10];
+                            state = true;
+                            break;
+                        }
+                    }
+                    if (!state)
+                        cipher += ch;
+
+                }
 
                 if (char.IsUpper(ch))
                 {
