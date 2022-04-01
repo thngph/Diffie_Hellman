@@ -1,6 +1,6 @@
 # Diffie_Hellman Chat App
 
-This is a 2nd uni-year lowkey secure chat app on C# socket. 
+This is a 2nd uni-year lowkey secure chat app over socket on C# Winform.
 
 Two parties first initial Diffie Hellman key exchange process, select secure algorithms.
 
